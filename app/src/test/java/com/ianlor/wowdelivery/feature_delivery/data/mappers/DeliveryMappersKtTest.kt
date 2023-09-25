@@ -1,5 +1,6 @@
 package com.ianlor.wowdelivery.feature_delivery.data.mappers
 
+import com.ianlor.wowdelivery.feature_delivery.data.DeliveryFactory
 import com.ianlor.wowdelivery.feature_delivery.data.local.DeliveryEntity
 import com.ianlor.wowdelivery.feature_delivery.data.remote.DeliveryDto
 import org.junit.Assert.*
@@ -10,23 +11,8 @@ class DeliveryMappersKtTest{
     private lateinit var deliveryDto:DeliveryDto
     @Before
     fun setup(){
-        deliveryDto = DeliveryDto(
-            id = "1",
-            goodsPicture = "Delivery A",
-            remarks = "This is a remark This is a remark This is a remark This is a remark This is a remark This is a remark This is a remark",
-            pickupTime = "2014-10-06T10:45:38-08:00",
-            deliveryFee = "$92",
-            surcharge = "$1221242",
-            route = DeliveryDto.Route(
-                start = "Central, Hong Lkong, Hong Kong",
-                end = "TST"
-            ),
-            sender = DeliveryDto.Sender(
-                phone = "2334144",
-                name = "Ken",
-                "kenisenough@mail.com"
-            ),
-        )
+        val deliveryFactory = DeliveryFactory()
+        deliveryDto = deliveryFactory.createDeliveryDto()
     }
 
     @Test
