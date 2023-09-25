@@ -20,7 +20,8 @@ class DeliveryDetailViewModel @Inject constructor(
     private val repo: DeliveriesRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    var delivery: Delivery? = null
+    var _delivery = mutableStateOf<Delivery?>(null)
+    var delivery: State<Delivery?> = _delivery
 
     private val _isFavourite = mutableStateOf(false)
     val isFavourite: State<Boolean> = _isFavourite
@@ -31,11 +32,9 @@ class DeliveryDetailViewModel @Inject constructor(
         if (id != -1) {
 
             viewModelScope.launch {
-                delivery = repo.getDeliveryById(id)
-                if (delivery != null) {
-                    _isFavourite.value =
-                        repo.isDeliveryFavourited(delivery!!.remoteId)
-                }
+                _delivery.value = repo.getDeliveryById(id)
+                _isFavourite.value =
+                    repo.isDeliveryFavourited(delivery.value!!.remoteId)
             }
         }
     }

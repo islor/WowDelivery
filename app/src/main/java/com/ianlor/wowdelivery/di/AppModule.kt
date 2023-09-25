@@ -53,7 +53,7 @@ object AppModule {
     ): Pager<Int, DeliveryEntity> {
 
         return Pager(
-            config = PagingConfig(pageSize = 2),
+            config = PagingConfig(pageSize = 20),
             remoteMediator = DeliveryRemoteMediator(
                 deliveryRepository
             ),

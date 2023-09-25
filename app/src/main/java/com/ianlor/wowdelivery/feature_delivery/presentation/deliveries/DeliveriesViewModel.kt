@@ -1,9 +1,6 @@
 package com.ianlor.wowdelivery.feature_delivery.presentation.deliveries
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -13,15 +10,16 @@ import com.ianlor.wowdelivery.feature_delivery.data.local.DeliveryEntity
 import com.ianlor.wowdelivery.feature_delivery.data.mappers.toDelivery
 import com.ianlor.wowdelivery.feature_delivery.domain.repository.DeliveriesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class DeliveriesViewModel @Inject constructor(pager: Pager<Int, DeliveryEntity>,
-                                              private val repo: DeliveriesRepository) :
+class DeliveriesViewModel @Inject constructor(
+    pager: Pager<Int, DeliveryEntity>,
+    private val repo: DeliveriesRepository
+) :
     ViewModel() {
 
     val deliveryPagingFlow = pager.flow.map { pagingData ->

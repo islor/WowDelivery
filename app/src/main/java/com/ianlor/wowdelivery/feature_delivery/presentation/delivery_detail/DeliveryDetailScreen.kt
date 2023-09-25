@@ -31,12 +31,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.ianlor.wowdelivery.TestTags
 import com.ianlor.wowdelivery.feature_delivery.presentation.components.RowLabelText
+import com.ianlor.wowdelivery.feature_delivery.util.NumberFormatUtil
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,7 +48,7 @@ fun DeliveryDetailScreen(
     navController: NavController,
     viewModel: DeliveryDetailViewModel = hiltViewModel()
 ) {
-    val delivery = viewModel.delivery
+    val delivery = viewModel.delivery.value
 
     Scaffold(topBar = {
         CenterAlignedTopAppBar(
@@ -64,16 +67,33 @@ fun DeliveryDetailScreen(
                         contentDescription = "Back"
                     )
                 }
-            }
+            },
+            modifier = Modifier.testTag(TestTags.DELIVERY_DETAIL_TOPBAR)
         )
     }) { padding ->
 
         if (delivery == null)
-            Text(text = "Delivery not found.")
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .testTag(TestTags.DELIVERY_DETAIL_EMPTY)
+            ) {
+                Text(
+                    text = "Delivery not found.",
+                    style = MaterialTheme.typography.h6,
+                    modifier = Modifier.align(
+                        Alignment.Center
+                    )
+                )
+            }
         else {
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .testTag(TestTags.DELIVERY_DETAIL_BODY)
+            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
@@ -152,12 +172,26 @@ fun DeliveryDetailScreen(
                         ) {
                             RowLabelText(
                                 label = "Delivery Fee:",
-                                value = "${delivery.deliveryFee}",
+                                value = NumberFormatUtil.sumOfCurrency(
+                                    delivery.deliveryFee,
+                                    ""
+                                ),
                                 style = MaterialTheme.typography.body1,
                             )
                             RowLabelText(
                                 label = "Surcharge:",
-                                value = "${delivery.surcharge}",
+                                value = NumberFormatUtil.sumOfCurrency(
+                                    delivery.surcharge,
+                                    ""
+                                ),
+                                style = MaterialTheme.typography.body1,
+                            )
+                            RowLabelText(
+                                label = "Total:",
+                                value = NumberFormatUtil.sumOfCurrency(
+                                    delivery.deliveryFee,
+                                    delivery.surcharge
+                                ),
                                 style = MaterialTheme.typography.body1,
                             )
                         }
@@ -189,12 +223,12 @@ fun DeliveryDetailScreen(
                     if (viewModel.isFavourite.value) {
                         Icon(
                             imageVector = Icons.Default.Favorite,
-                            contentDescription = "Favourite"
+                            contentDescription = "Remove Favourite"
                         )
                     } else {
                         Icon(
                             imageVector = Icons.Default.FavoriteBorder,
-                            contentDescription = "Favourite"
+                            contentDescription = "Add Favourite"
                         )
                     }
                 }

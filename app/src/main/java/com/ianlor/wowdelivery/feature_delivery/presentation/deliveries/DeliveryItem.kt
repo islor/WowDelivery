@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ianlor.wowdelivery.feature_delivery.domain.model.Delivery
 import com.ianlor.wowdelivery.feature_delivery.presentation.components.RowLabelText
+import com.ianlor.wowdelivery.feature_delivery.util.NumberFormatUtil
 import com.ianlor.wowdelivery.ui.theme.WowDeliveryTheme
 import java.text.NumberFormat
 import java.util.Locale
@@ -68,7 +69,7 @@ fun DeliveryItem(
                     contentDescription = delivery.remarks,
                     modifier = Modifier
                         .weight(1f)
-                        .height(120.dp),
+                        .fillMaxHeight(),
                     contentScale = ContentScale.Crop
                 )
                 Spacer(modifier = Modifier.width(16.dp))
@@ -97,24 +98,10 @@ fun DeliveryItem(
                                 value = "${delivery.route.end}",
                                 style = MaterialTheme.typography.body2,
                             )
-                        }
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        val format: NumberFormat =
-                            NumberFormat.getCurrencyInstance(Locale.getDefault())
-                        val fee = if (delivery.deliveryFee.isEmpty()) "-" else format.parse(delivery.deliveryFee)
-                        val surcharge = if (delivery.surcharge.isEmpty()) "-" else format.parse(delivery.surcharge)
-                        Log.d("test ", "${format.parse(delivery.deliveryFee)}")
-                        Column(modifier = Modifier.weight(1f)) {
                             RowLabelText(
-                                label = "Fee:",
-                                value = "${format.format(fee)}",
-                                style = MaterialTheme.typography.body2,
-                            )
-                            RowLabelText(
-                                label = "Surcharge:",
-                                value = "${format.format(surcharge)}",
-                                style = MaterialTheme.typography.body2,
+                                    label = "$:",
+                            value = NumberFormatUtil.sumOfCurrency(delivery.deliveryFee, delivery.surcharge),
+                            style = MaterialTheme.typography.body2,
                             )
                         }
                     }
@@ -147,7 +134,7 @@ fun DeliveryItemPreview() {
                 remarks = "This is a remark This is a remark This is a remark This is a remark This is a remark This is a remark This is a remark",
                 pickupTime = "2014-10-06T10:45:38-08:00",
                 deliveryFee = "$92",
-                surcharge = "$1221242",
+                surcharge = "$122",
                 route = Delivery.Route(
                     start = "Central, Hong Lkong, Hong Kong",
                     end = "TST"
