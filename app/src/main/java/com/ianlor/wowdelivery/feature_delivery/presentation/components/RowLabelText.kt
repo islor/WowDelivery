@@ -33,8 +33,6 @@ fun RowLabelText(
             text = label,
             style = style,
             fontSize = 12.sp,
-            modifier = Modifier
-                .weight(1f),
             maxLines = 1,
 
             )

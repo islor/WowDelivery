@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,11 +19,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -40,6 +37,10 @@ import coil.compose.AsyncImage
 import com.ianlor.wowdelivery.TestTags
 import com.ianlor.wowdelivery.feature_delivery.presentation.components.RowLabelText
 import com.ianlor.wowdelivery.feature_delivery.util.NumberFormatUtil
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -172,25 +173,88 @@ fun DeliveryDetailScreen(
                         ) {
                             RowLabelText(
                                 label = "Delivery Fee:",
-                                value = NumberFormatUtil.sumOfCurrency(
-                                    delivery.deliveryFee,
-                                    ""
-                                ),
+                                value = "$${
+                                    NumberFormatUtil.sumOfCurrency(
+                                        delivery.deliveryFee,
+                                        ""
+                                    )
+                                }",
                                 style = MaterialTheme.typography.body1,
                             )
                             RowLabelText(
                                 label = "Surcharge:",
-                                value = NumberFormatUtil.sumOfCurrency(
-                                    delivery.surcharge,
-                                    ""
-                                ),
+                                value = "$${
+                                    NumberFormatUtil.sumOfCurrency(
+                                        delivery.surcharge,
+                                        ""
+                                    )
+                                }",
                                 style = MaterialTheme.typography.body1,
                             )
                             RowLabelText(
                                 label = "Total:",
-                                value = NumberFormatUtil.sumOfCurrency(
-                                    delivery.deliveryFee,
-                                    delivery.surcharge
+                                value = "$${
+                                    NumberFormatUtil.sumOfCurrency(
+                                        delivery.deliveryFee,
+                                        delivery.surcharge
+                                    )
+                                }",
+                                style = MaterialTheme.typography.body1,
+                            )
+                        }
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .background(color = MaterialTheme.colors.surface)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Sender",
+                                style = MaterialTheme.typography.body1,
+                            )
+                            RowLabelText(
+                                label = "Name:",
+                                value = delivery.sender.name,
+                                style = MaterialTheme.typography.body1,
+                            )
+                            RowLabelText(
+                                label = "Phone:",
+                                value = delivery.sender.phone,
+                                style = MaterialTheme.typography.body1,
+                            )
+                            RowLabelText(
+                                label = "Email:",
+                                value = delivery.sender.email,
+                                style = MaterialTheme.typography.body1,
+                            )
+                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .background(color = MaterialTheme.colors.surface)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            RowLabelText(
+                                label = "Pickup time:",
+                                value = NumberFormatUtil.convertDateTime(
+                                    delivery.pickupTime
                                 ),
                                 style = MaterialTheme.typography.body1,
                             )
